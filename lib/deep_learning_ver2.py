@@ -2,7 +2,7 @@ from lib.numerical_derivative import numerical_derivative
 import numpy as np
 
 class DeepLearning:
-    def __init__(self, name, xdata, tdata, i_node, h1_node, o_node, lr, epochs):
+    def __init__(self, name, xdata, tdata, nodes, lr, epochs):
         self.name = name
         if xdata.ndim == 1:     # vector
             self.xdata = xdata.reshape(len(xdata), 1)
@@ -14,15 +14,12 @@ class DeepLearning:
             else:
                 self.tdata = tdata
 
-        self.input_node = i_node
-        self.h1_node = h1_node
-        self.output_node = o_node
-
-        self.W2 = np.random.rand(i_node, h1_node)
-        self.b2 = np.random.rand(h1_node)
-        self.W3 = np.random.rand(h1_node, o_node)
-        self.b3 = np.random.rand(o_node)
-
+        self.W = []
+        self.b = []
+        for i in range(len(nodes) - 1):
+            self.W.append(np.random.rand(nodes[i], nodes[i + 1]))
+            self.b.append(np.random.rand(nodes[i + 1]))
+        
         self.learning_rate = lr
         self.epochs = epochs
 
@@ -33,18 +30,20 @@ class DeepLearning:
                 self.target_data = self.tdata[i]
 
                 f = lambda x : self.feed_forward()
-                self.W2 -= self.learning_rate * numerical_derivative(f, self.W2)
-                self.b2 -= self.learning_rate * numerical_derivative(f, self.b2)
-                self.W3 -= self.learning_rate * numerical_derivative(f, self.W3)
-                self.b3 -= self.learning_rate * numerical_derivative(f, self.b3)
+                for i in range(len(self.W)):
+                    self.W[i] -= self.learning_rate * numerical_derivative(f, self.W[i])
+                    self.b[i] -= self.learning_rate * numerical_derivative(f, self.b[i])
             if debug and step % interval == 0:
                 print("epoch:", step, "loss_val:", self.loss_val())
     
     def predict(self, test_data):
-        z2 = np.dot(test_data, self.W2) + self.b2
-        a2 = self.sigmoid(z2)
-        z3 = np.dot(a2, self.W3) + self.b3
-        y = self.sigmoid(z3)
+        z = np.dot(test_data, self.W[0]) + self.b[0]
+        a = self.sigmoid(z)
+        for i in range(1, len(self.W) - 1):
+            z = np.dot(a, self.W[i]) + self.b[i]
+            a = self.sigmoid(a)
+        y = a
+        print(y)
         if y > 0.5:
             result = 1
         else:
@@ -68,19 +67,23 @@ class DeepLearning:
 
     def feed_forward(self):
         delta = 1e-7
-        z2 = np.dot(self.input_data, self.W2) + self.b2
-        a2 = self.sigmoid(z2)
-        z3 = np.dot(a2, self.W3) + self.b3
-        y = self.sigmoid(z3)
+        z = np.dot(self.input_data, self.W[0]) + self.b[0]
+        a = self.sigmoid(z)
+        for i in range(len(self.W) - 1):
+            z = np.dot(a, self.W[i + 1]) + self.b[i + 1]
+            a = self.sigmoid(a) 
+        y = a
         return (-1) * np.sum(self.target_data * np.log(y + delta) + (1 - self.target_data) * np.log((1 - y) + delta))
 
     def loss_val(self):
         delta = 1e-7
-        z2 = np.dot(self.xdata, self.W2) + self.b2
-        a2 = self.sigmoid(z2)
-        z3 = np.dot(a2, self.W3) + self.b3
-        y = self.sigmoid(z3)
-        return (-1) * np.sum(self.tdata * np.log(y + delta) + (1 - self.tdata) * np.log((1 - y) + delta))
+        z = np.dot(self.input_data, self.W[0]) + self.b[0]
+        a = self.sigmoid(z)
+        for i in range(len(self.W) - 1):
+            z = np.dot(a, self.W[i + 1]) + self.b[i + 1]
+            a = self.sigmoid(a) 
+        y = a
+        return (-1) * np.sum(self.target_data * np.log(y + delta) + (1 - self.target_data) * np.log((1 - y) + delta))
        
     def sigmoid(self, z):
         return 1 / (1 + np.exp(-z))

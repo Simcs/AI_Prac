@@ -31,8 +31,8 @@ class LinearRegressionTest:
         for step in range(self.iteration_count + 1):
             self.W -= self.learning_rate * numerical_derivative(f, self.W)
             self.b -= self.learning_rate * numerical_derivative(f, self.b)
-            # if step % 1000 == 0:
-            #     print("step :", step, "error value :" , self.error_val(), "W =", self.W, "b =", self.b)
+            if step % 1000 == 0:
+                print("step :", step, "error value :" , self.error_val(), "W =", self.W, "b =", self.b)
         
         print("final error value :", self.error_val(), "final W =", self.W, "\nb =", self.b)
         print("Elapsed time :", datetime.now() - start_time)

@@ -1,9 +1,10 @@
 from lib.numerical_derivative import numerical_derivative
 import numpy as np
 
-class Diabetes:
-    def __init__(self, name, i_node, h1_node, o_node, lr):
+class DeepLearning:
+    def __init__(self, name, training_data, i_node, h1_node, o_node, lr, epochs):
         self.name = name
+        self.training_data = training_data
         
         self.input_node = i_node
         self.h1_node = h1_node
@@ -15,6 +16,7 @@ class Diabetes:
         self.b3 = np.random.rand(o_node)
 
         self.learning_rate = lr
+        self.epochs = epochs
 
     def train(self, input, target):
         self.input_data = input

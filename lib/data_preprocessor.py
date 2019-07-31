@@ -13,9 +13,6 @@ def separate(file_name, rate, delimiter=","):
     training_data_file_name = path + "_training_data.csv"
     test_data_file_name = path + "_test_data.csv"
 
-    np.savetxt(training_data_file_name, training_data, delimiter=delimiter)
-    np.savetxt(test_data_file_name, test_data, delimiter=delimiter)
-
 def normalize(file_name, delimiter=","):
 
     data = np.loadtxt(file_name, delimiter=delimiter, dtype=np.float32)

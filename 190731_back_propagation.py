@@ -1,4 +1,5 @@
 from lib.numerical_derivative import numerical_derivative
+import lib.data_generator
 import numpy as np
 
 class DeepLearning:
@@ -29,14 +30,21 @@ class DeepLearning:
     def train(self, debug=False, interval=5):
         for step in range(self.epochs):
             for i in range(len(self.xdata)):
-                self.input_data = self.xdata[i]
-                self.target_data = self.tdata[i]
+                self.input_data = np.array(self.xdata[i], ndmin=2)
+                self.target_data = np.array(self.tdata[i], ndmin=2)
 
-                f = lambda x : self.feed_forward()
-                self.W2 -= self.learning_rate * numerical_derivative(f, self.W2)
-                self.b2 -= self.learning_rate * numerical_derivative(f, self.b2)
-                self.W3 -= self.learning_rate * numerical_derivative(f, self.W3)
-                self.b3 -= self.learning_rate * numerical_derivative(f, self.b3)
+                z2 = np.dot(self.input_data, self.W2) + self.b2
+                a2 = self.sigmoid(z2)
+                z3 = np.dot(a2, self.W3) + self.b3
+                a3 = self.sigmoid(z3)
+
+                loss_3 = (self.target_data - a3) * a3 * (1 - a3)
+                loss_2 = np.dot(np.dot(loss_3, self.W3.T), np.dot(a2, 1 - a2))
+
+                self.W2 -= self.learning_rate * np.dot(self.input_data.T, loss_2)
+                self.b2 -= self.learning_rate * loss_2
+                self.W3 -= self.learning_rate * np.dot(a2.T, loss_3)
+                self.b3 -= self.learning_rate * loss_3
             if debug and step % interval == 0:
                 print("epoch:", step, "loss_val:", self.loss_val())
     
@@ -84,3 +92,26 @@ class DeepLearning:
        
     def sigmoid(self, z):
         return 1 / (1 + np.exp(-z))
+
+if __name__ == '__main__':
+
+    lib.data_generator.DataGeneration("./data/diabetes.csv", 0.5, True).generate()
+    diabetes_training_data = np.loadtxt("./data/diabetes_normalized_training_data.csv", delimiter=",", dtype=np.float32)
+    diabetes_test_data = np.loadtxt("./data/diabetes_normalized_test_data.csv", delimiter=",", dtype=np.float32)
+    training_xdata = diabetes_training_data[0:-1, :]
+    training_tdata = diabetes_training_data[-1, :]
+    test_xdata = diabetes_test_data[0:-1, :]
+    test_tdata = diabetes_test_data[-1, :]
+    
+    i_node = training_xdata.shape[1]
+    h1_node = 10
+    o_node = 1
+    lr = 1e-2
+    epochs = 30
+
+    test = DeepLearning("Diabetes", training_xdata, training_tdata, i_node, h1_node, o_node, lr, epochs)
+    test.train()
+
+    (matched_list, not_mathced_list, prediction_list) = test.accuracy(test_xdata, test_tdata)
+    print(prediction_list)
+    print("accuracy:", len(matched_list) / len(test_xdata))
