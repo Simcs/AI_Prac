@@ -1,29 +1,12 @@
 import numpy as np
+from lib.numerical_derivative import numerical_derivative
 
-data = np.loadtxt("regression_testdata_03.csv", delimiter=",", dtype=np.float32)
+data = np.loadtxt("./data/regression_testdata_03.csv", delimiter=",", dtype=np.float32)
 x_data = data[:, 0:-1]
 t_data = data[:, [-1]]
 
 W = np.random.rand(len(x_data[0]), 1)
 b = np.random.rand(1)
-
-def numerical_derivative(f, x):
-    delta_x = 1e-4
-    grad = np.zeros_like(x)
-    it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
-
-    while not it.finished:
-        idx = it.multi_index
-        tmp_val = x[idx]
-        x[idx] = tmp_val + delta_x
-        fx1 = f(x)
-        x[idx] = tmp_val - delta_x
-        fx2 = f(x)
-
-        grad[idx] = (fx1 - fx2) / (2 * delta_x)
-        x[idx] = tmp_val
-        it.iternext()
-    return grad
 
 # function which calculates y and E(W, b)
 def loss_func(x, t):
@@ -45,7 +28,7 @@ if __name__ == "__main__":
     f = lambda x : loss_func(x_data, t_data)
     print("initial error value :", error_val(x_data, t_data), "W =", W, "\nb =", b)
     # 8000 ~ 500000
-    for step in range(10001):
+    for step in range(20001):
         W -= learning_rate * numerical_derivative(f, W)
         b -= learning_rate * numerical_derivative(f, b)
 

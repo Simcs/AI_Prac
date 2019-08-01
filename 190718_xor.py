@@ -14,10 +14,11 @@ if __name__ == "__main__":
     test_and = SimpleLogisticRegression(data_x, data_t_and, 1e-3, 10000)
     test_and.train()
 
-    print('nand accuracy:', test_nand.accuracy(data_x, data_t_nand))
-    print('or accuracy:', test_or.accuracy(data_x, data_t_or))
-    print('and accuracy:', test_and.accuracy(data_x, data_t_and))
+    print('nand accuracy:', test_nand.accuracy1(data_x, data_t_nand))
+    print('or accuracy:', test_or.accuracy1(data_x, data_t_or))
+    print('and accuracy:', test_and.accuracy1(data_x, data_t_and))
 
+    # combine nand, or, and gate to create xor gate
     input_data = data_x
     output_data = []
     for x in data_x:

@@ -1,4 +1,5 @@
 import numpy as np
+from lib.numerical_derivative import numerical_derivative
 
 x_data = np.array([1, 2, 3, 4, 5, 20, 400]).reshape(7, 1)
 t_data = np.array([1, 4, 9, 16, 25, 400, 160000]).reshape(7, 1)
@@ -6,29 +7,6 @@ t_data = np.array([1, 4, 9, 16, 25, 400, 160000]).reshape(7, 1)
 W = np.random.rand(1, 1)
 b = np.random.rand(1)
 print('W = ', W , "W shape = ", W.shape, ", b = ", b, ", b.shape = ", b.shape)
-
-import numpy as np
-
-def numerical_derivative(f, x):
-    delta_x = 1e-4
-    grad = np.zeros_like(x)
-
-    it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
-
-    while not it.finished:
-        idx = it.multi_index
-
-        tmp_val = x[idx]
-        x[idx] = tmp_val + delta_x
-        fx1 = f(x)
-
-        x[idx] = tmp_val - delta_x
-        fx2 = f(x)
-
-        grad[idx] = (fx1 - fx2) / (2 * delta_x)
-        x[idx] = tmp_val
-        it.iternext()
-    return grad
 
 # function which calculates y and E(W, b)
 def loss_func(x, t):

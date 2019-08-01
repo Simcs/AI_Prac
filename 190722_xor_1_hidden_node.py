@@ -41,7 +41,7 @@ if __name__ == '__main__':
     test_data = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
 
     input_node_num = 2
-    hidden_node_num = 2
+    hidden_node_num = 4
     output_node_num = 1
 
     W2 = np.random.rand(input_node_num, hidden_node_num)
@@ -49,6 +49,7 @@ if __name__ == '__main__':
     W3 = np.random.rand(hidden_node_num, output_node_num)
     b3 = np.random.rand(output_node_num)
 
+    # xor problem solved!
     learning_rate = 1e-2
     f = lambda x : feed_forward(xdata, xor_tdata)
     for step in range(30000):

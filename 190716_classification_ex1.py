@@ -8,6 +8,6 @@ if __name__ == "__main__":
 
     test_data = np.array([12])
 
-    test1 = SimpleLogisticRegression(xdata, tdata, 1e-3, 100000, 5000)
-    test1.train()
+    test1 = SimpleLogisticRegression(xdata, tdata, 1e-3, 100000)
+    test1.train(debug=True, interval=5000)
     print("Predict", test_data, ":", test1.predict(test_data))

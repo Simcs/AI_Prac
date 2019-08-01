@@ -5,16 +5,8 @@ from datetime import datetime
 class LogicGate:
     def __init__(self, name, xdata, tdata, i_node, h1_node, h2_node, o_node, learning_rate, iteration_count):
         self.name = name
-
-        if xdata.ndim == 1:
-            self.xdata = xdata.reshape(len(xdata), 1)
-            self.tdata = tdata.reshape(len(tdata), 1)
-        elif xdata.ndim == 2:
-            self.xdata = xdata
-            if tdata.ndim == 1:
-                self.tdata = tdata.reshape(len(tdata), 1)
-            else:
-                self.tdata = tdata
+        self.xdata = xdata
+        self.tdata = tdata.reshape(len(tdata), 1)
 
         self.learning_rate = learning_rate
         self.iteration_count = iteration_count
