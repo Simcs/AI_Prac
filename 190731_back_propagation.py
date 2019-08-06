@@ -45,6 +45,7 @@ class DeepLearning:
                 # print("a3", a3.shape)
 
                 loss_3 = (a3 - self.target_data) * a3 * (1 - a3)
+                print("1.", a3 - self.target_data, "2.", a3*(1-a3))
                 self.W3 -= self.learning_rate * np.dot(a2.T, loss_3)
                 self.b3 -= self.learning_rate * loss_3
                 # print("loss_3", loss_3.shape)
@@ -103,34 +104,40 @@ class DeepLearning:
 
 if __name__ == '__main__':
 
-    # (training_data, test_data) = DataGenerator("Diabetes", "./data/diabetes.csv", 0.5, True).generate()
-    # training_xdata = training_data[:, 0:-1]
-    # training_tdata = training_data[:, -1]
-    # test_xdata = test_data[:, 0:-1]
-    # test_tdata = test_data[:, -1]
-    
-    # test = DeepLearning("Diabetes", training_xdata, training_tdata, i_node, h1_node, o_node, lr, epochs)
-    # test.train(debug=True, interval=50)
-
-    # (matched_list, not_mathced_list, prediction_list) = test.accuracy(test_xdata, test_tdata)
-    # print(prediction_list)
-    # print("accuracy:", len(matched_list) / len(test_xdata))
-
-    (training_data, test_data) = DataGenerator("ThoracicSurgery", "./data/ThoracicSurgery.csv", 0.6, True).generate()
+    (training_data, test_data) = DataGenerator("Diabetes", "./data/diabetes.csv", 0.5, True).generate()
     training_xdata = training_data[:, 0:-1]
     training_tdata = training_data[:, -1]
     test_xdata = test_data[:, 0:-1]
     test_tdata = test_data[:, -1]
-
+    
     i_node = training_xdata.shape[1]
     h1_node = 50
     o_node = 1
     lr = 1e-1
-    epochs = 500
+    epochs = 3
 
-    test = DeepLearning("ThoracicSurgery", training_xdata, training_tdata, i_node, h1_node, o_node, lr, epochs)
+    test = DeepLearning("Diabetes", training_xdata, training_tdata, i_node, h1_node, o_node, lr, epochs)
     test.train(debug=True, interval=50)
 
     (matched_list, not_mathced_list, prediction_list) = test.accuracy(test_xdata, test_tdata)
     print(prediction_list)
     print("accuracy:", len(matched_list) / len(test_xdata))
+
+    # (training_data, test_data) = DataGenerator("ThoracicSurgery", "./data/ThoracicSurgery.csv", 0.6, True).generate()
+    # training_xdata = training_data[:, 0:-1]
+    # training_tdata = training_data[:, -1]
+    # test_xdata = test_data[:, 0:-1]
+    # test_tdata = test_data[:, -1]
+
+    i_node = training_xdata.shape[1]
+    h1_node = 50
+    o_node = 1
+    lr = 1e-1
+    epochs = 1
+
+    # test = DeepLearning("ThoracicSurgery", training_xdata, training_tdata, i_node, h1_node, o_node, lr, epochs)
+    # test.train(debug=True, interval=50)
+
+    # (matched_list, not_mathced_list, prediction_list) = test.accuracy(test_xdata, test_tdata)
+    # print(prediction_list)
+    # print("accuracy:", len(matched_list) / len(test_xdata))

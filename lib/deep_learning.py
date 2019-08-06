@@ -14,10 +14,6 @@ class DeepLearning:
             else:
                 self.tdata = tdata
 
-        self.input_node = i_node
-        self.h1_node = h1_node
-        self.output_node = o_node
-
         self.W2 = np.random.rand(i_node, h1_node)
         self.b2 = np.random.rand(h1_node)
         self.W3 = np.random.rand(h1_node, o_node)

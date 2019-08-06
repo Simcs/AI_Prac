@@ -1,4 +1,5 @@
 from lib.numerical_derivative import numerical_derivative
+from lib.data_generator import DataGenerator
 from datetime import datetime
 import numpy as np
 
@@ -6,10 +7,6 @@ class Diabetes:
     def __init__(self, name, i_node, h1_node, o_node, lr):
         self.name = name
         
-        self.input_node = i_node
-        self.h1_node = h1_node
-        self.output_node = o_node
-
         self.W2 = np.random.rand(i_node, h1_node)
         self.b2 = np.random.rand(h1_node)
         self.W3 = np.random.rand(h1_node, o_node)
@@ -73,29 +70,50 @@ class Diabetes:
         return 1 / (1 + np.exp(-z))
     
 if __name__ == '__main__':
-    diabetes_data = np.loadtxt("./data/diabetes.csv", delimiter=",", dtype=np.float32)
-    train_rate = 0.6
-    boundary = int(np.trunc(len(diabetes_data) * train_rate))
 
-    train_data = diabetes_data[:boundary, :]
-    test_xdata = diabetes_data[boundary:, 0:-1]
-    test_tdata = diabetes_data[boundary:, -1]
+    (training_data, test_data) = DataGenerator("Diabetes", "./data/diabetes.csv", 0.6, True).generate()
+    test_xdata = test_data[:, 0:-1]
+    test_tdata = test_data[:, -1]
     
-    i_node = train_data.shape[1] - 1
+    i_node = training_data.shape[1] - 1
     h1_node = 10
     o_node = 1
-    lr = 1e-2
+    lr = 1e-3
     epochs = 30
-
+    
+    # Mini-batch size == 1
+    # => Stochastic gradient descent method!
+    start = datetime.now()
     test = Diabetes("Diabetes", i_node, h1_node, o_node, lr)
     for step in range(epochs):
-        for i in range(len(train_data)):
-            input_data = train_data[i, 0:-1]
-            target_data = train_data[i, -1]
+        for i in range(len(training_data)):
+            input_data = training_data[i, 0:-1]
+            target_data = training_data[i, -1]
             test.train(input_data, target_data)
         if step % 5 == 0:
             print("epoch:", step, ", loss value:", test.loss_val())
-        
+    elapsedTime = datetime.now() - start
+    print("Stochastic gradient descent method :", elapsedTime)
+    
+    (matched_list, not_mathced_list, prediction_list) = test.accuracy(test_xdata, test_tdata)
+    print(prediction_list)
+    print("accuracy:", len(matched_list) / len(test_xdata))
+
+    # Mini-batch size == 16
+    batch_size = 16
+    startTime = datetime.now()
+    test = Diabetes("Diabetes", i_node, h1_node, o_node, lr)
+    for step in range(epochs):
+        for i in range(int(len(training_data) / batch_size)):
+            start = i * batch_size
+            end = (i + 1) * batch_size if (i + 1) * batch_size < len(training_data) else len(training_data)
+            input_data = training_data[start:end, 0:-1]
+            target_data = training_data[start:end, -1]
+            test.train(input_data, target_data)
+        if step % 5 == 0:
+            print("epoch:", step, ", loss value:", test.loss_val())
+    elapsedTime = datetime.now() - startTime
+    print("batch gradient descent method ( Mini-batch size ==", batch_size, ") :", elapsedTime)
 
     (matched_list, not_mathced_list, prediction_list) = test.accuracy(test_xdata, test_tdata)
     print(prediction_list)

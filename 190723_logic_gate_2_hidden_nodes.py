@@ -105,29 +105,29 @@ if __name__ == "__main__":
     h2_node = 4
     output_node = 1
 
-    # # TEST_AND_GATE
-    # and_tdata = np.array([0, 0, 0, 1])
-    # test_and_data = np.array([[0, 0, 0], [0, 1, 0], [1, 0, 0], [1, 1, 1]])
-    # gate = LogicGate("AND", xdata, and_tdata, input_node, h1_node, h2_node, output_node, 1e-1, 10000)
-    # gate.train()
-    # print(gate.name, 'accuracy1:', gate.accuracy1(xdata, and_tdata))
-    # print(gate.name, 'accuracy2:', gate.accuracy2(test_and_data))
+    # TEST_AND_GATE
+    and_tdata = np.array([0, 0, 0, 1])
+    test_and_data = np.array([[0, 0, 0], [0, 1, 0], [1, 0, 0], [1, 1, 1]])
+    gate = LogicGate("AND", xdata, and_tdata, input_node, h1_node, h2_node, output_node, 1e-1, 10000)
+    gate.train()
+    print(gate.name, 'accuracy1:', gate.accuracy1(xdata, and_tdata))
+    print(gate.name, 'accuracy2:', gate.accuracy2(test_and_data))
     
-    # # TEST_OR_GATE
-    # or_tdata = np.array([0, 1, 1, 1])
-    # test_or_data = np.array([[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
-    # gate = LogicGate("OR", xdata, or_tdata, input_node, h1_node, h2_node, output_node, 1e-1, 10000)
-    # gate.train()
-    # print(gate.name, 'accuracy1:', gate.accuracy1(xdata, or_tdata))
-    # print(gate.name, 'accuracy2:', gate.accuracy2(test_or_data))
+    # TEST_OR_GATE
+    or_tdata = np.array([0, 1, 1, 1])
+    test_or_data = np.array([[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
+    gate = LogicGate("OR", xdata, or_tdata, input_node, h1_node, h2_node, output_node, 1e-1, 10000)
+    gate.train()
+    print(gate.name, 'accuracy1:', gate.accuracy1(xdata, or_tdata))
+    print(gate.name, 'accuracy2:', gate.accuracy2(test_or_data))
 
-    # # TEST_NAND_GATE
-    # nand_tdata = np.array([1, 1, 1, 0])
-    # test_nand_data = np.array([[0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 0]])
-    # gate = LogicGate("NAND", xdata, nand_tdata, input_node, h1_node, h2_node, output_node, 1e-1, 10000)
-    # gate.train(True, 1000)
-    # print(gate.name, 'accuracy1:', gate.accuracy1(xdata, nand_tdata))
-    # print(gate.name, 'accuracy2:', gate.accuracy2(test_nand_data))
+    # TEST_NAND_GATE
+    nand_tdata = np.array([1, 1, 1, 0])
+    test_nand_data = np.array([[0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 0]])
+    gate = LogicGate("NAND", xdata, nand_tdata, input_node, h1_node, h2_node, output_node, 1e-1, 10000)
+    gate.train(True, 1000)
+    print(gate.name, 'accuracy1:', gate.accuracy1(xdata, nand_tdata))
+    print(gate.name, 'accuracy2:', gate.accuracy2(test_nand_data))
 
     # TEST_XOR_GATE
     xor_tdata = np.array([0, 1, 1, 0])

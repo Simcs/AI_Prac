@@ -1,15 +1,11 @@
-import lib.data_preprocessor
 from lib.numerical_derivative import numerical_derivative
+from lib.data_generator import DataGenerator
 import numpy as np
 
 class DeepLearning:
     def __init__(self, name, i_node, h1_node, o_node, lr):
         self.name = name
         
-        self.input_node = i_node
-        self.h1_node = h1_node
-        self.output_node = o_node
-
         self.W2 = np.random.rand(i_node, h1_node)
         self.b2 = np.random.rand(h1_node)
         self.W3 = np.random.rand(h1_node, o_node)
@@ -73,12 +69,9 @@ class DeepLearning:
         return 1 / (1 + np.exp(-z))
 
 if __name__ == '__main__':
-    lib.data_preprocessor.normalize("./data/ThoracicSurgery.csv")
-    lib.data_preprocessor.separate("./data/ThoracicSurgery_normalized.csv", 0.6)
 
-    training_data = np.loadtxt("./data/ThoracicSurgery_normalized_training_data.csv", delimiter=",", dtype=np.float32)
-    test_data = np.loadtxt("./data/ThoracicSurgery_normalized_test_data.csv", delimiter=",", dtype=np.float32)
-    
+    (training_data, test_data) = DataGenerator("ThoracicSurgery", "./data/ThoracicSurgery.csv", 0.6, True).generate()
+
     i_node = training_data.shape[1] - 1
     h1_node = 10
     o_node = 1

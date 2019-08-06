@@ -1,4 +1,5 @@
 from lib.numerical_derivative import numerical_derivative
+from lib.data_generator import DataGenerator
 from datetime import datetime
 import numpy as np
 
@@ -15,10 +16,6 @@ class Diabetes:
             else:
                 self.tdata = tdata
         
-        self.input_node = i_node
-        self.h1_node = h1_node
-        self.output_node = o_node
-
         self.W2 = np.random.rand(i_node, h1_node)
         self.b2 = np.random.rand(h1_node)
         self.W3 = np.random.rand(h1_node, o_node)
@@ -33,7 +30,6 @@ class Diabetes:
         
         if debug:
             print("Test System :")
-            print("input node:", self.input_node, ", h1 node:", self.h1_node, ", output node:", self.output_node)
             print("learning rate:", self.learning_rate, "iteration count:", self.iteration_count)
             print(self.name, "initial loss value :", self.loss_val(), "\n")
 
@@ -108,22 +104,22 @@ class Diabetes:
         return 1 / (1 + np.exp(-z))
     
 if __name__ == '__main__':
-    diabetes_data = np.loadtxt("./data/diabetes.csv", delimiter=",", dtype=np.float32)
-    train_rate = 0.7
-    boundary = int(np.trunc(len(diabetes_data) * train_rate))
+    (training_data, test_data) = DataGenerator("Diabetes", "./data/diabetes.csv", 0.6, True).generate()
 
-    train_xdata = diabetes_data[:boundary, 0:-1]
-    train_tdata = diabetes_data[:boundary, -1]
-    test_xdata = diabetes_data[boundary:, 0:-1]
-    test_tdata = diabetes_data[boundary:, -1]
+    training_xdata = training_data[:, 0:-1]
+    training_tdata = training_data[:, -1]
+    test_xdata = test_data[:, 0:-1]
+    test_tdata = test_data[:, -1]
     
-    i_node = train_xdata.shape[1]
+    i_node = training_xdata.shape[1]
     h1_node = 5
     o_node = 1
     lr = 1e-2
     itr_count = 5000
 
-    test = Diabetes("Diabetes", train_xdata, train_tdata, i_node, h1_node, o_node, lr, itr_count)
+    # Mini-batch size == training_data size 
+    # => Batch gradient descent method!
+    test = Diabetes("Diabetes", training_xdata, training_tdata, i_node, h1_node, o_node, lr, itr_count)
     test.train(True, 500)
 
     (matched_list, not_mathced_list, prediction_list) = test.accuracy(test_xdata, test_tdata)
