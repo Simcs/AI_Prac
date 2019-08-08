@@ -1,2 +1,6 @@
 # ignoring folder
 downloads/
+data/
+
+# ignoring files
+test.py
