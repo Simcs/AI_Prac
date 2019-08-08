@@ -72,11 +72,11 @@ class DeepLearning:
 
     def loss_val(self):
         delta = 1e-7
-        z2 = np.dot(self.xdata, self.W2) + self.b2
+        z2 = np.dot(self.input_data, self.W2) + self.b2
         a2 = self.sigmoid(z2)
         z3 = np.dot(a2, self.W3) + self.b3
         y = self.sigmoid(z3)
-        return (-1) * np.sum(self.tdata * np.log(y + delta) + (1 - self.tdata) * np.log((1 - y) + delta))
+        return (-1) * np.sum(self.target_data * np.log(y + delta) + (1 - self.target_data) * np.log((1 - y) + delta))
        
     def sigmoid(self, z):
         return 1 / (1 + np.exp(-z))

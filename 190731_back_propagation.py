@@ -106,9 +106,9 @@ if __name__ == '__main__':
 
     (training_data, test_data) = DataGenerator("Diabetes", "./data/diabetes.csv", 0.5, True).generate()
     training_xdata = training_data[:, 0:-1]
-    training_tdata = training_data[:, -1]
+    training_tdata = training_data[:, [-1]]
     test_xdata = test_data[:, 0:-1]
-    test_tdata = test_data[:, -1]
+    test_tdata = test_data[:, [-1]]
     
     i_node = training_xdata.shape[1]
     h1_node = 50

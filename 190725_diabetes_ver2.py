@@ -88,7 +88,7 @@ if __name__ == '__main__':
     for step in range(epochs):
         for i in range(len(training_data)):
             input_data = training_data[i, 0:-1]
-            target_data = training_data[i, -1]
+            target_data = training_data[i, [-1]]
             test.train(input_data, target_data)
         if step % 5 == 0:
             print("epoch:", step, ", loss value:", test.loss_val())
@@ -108,7 +108,7 @@ if __name__ == '__main__':
             start = i * batch_size
             end = (i + 1) * batch_size if (i + 1) * batch_size < len(training_data) else len(training_data)
             input_data = training_data[start:end, 0:-1]
-            target_data = training_data[start:end, -1]
+            target_data = training_data[start:end, [-1]]
             test.train(input_data, target_data)
         if step % 5 == 0:
             print("epoch:", step, ", loss value:", test.loss_val())

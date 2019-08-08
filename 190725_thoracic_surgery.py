@@ -82,7 +82,7 @@ if __name__ == '__main__':
     for i in range(epoch):
         for j in range(len(training_data)):
             input_data = training_data[i, 0:-1]
-            target_data = training_data[i, -1]
+            target_data = training_data[i, [-1]]
             test.train(input_data, target_data)
         if i % 5 == 0:
             print("epoch:", i, ", loss value:", test.loss_val())
